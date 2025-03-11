@@ -69,7 +69,7 @@ def profile(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Token expired or invalid")
     
     user = users_db.get(email)
-    return {"name": user['name'], "email": user['email'], "mobile": user['mobile']}
+    return {"name": user['name'], "email": user['email'], "mobile": user['mobile']} # type: ignore
 
 blacklisted_tokens = set()
 @app.delete("/logout")
@@ -78,3 +78,7 @@ def logout(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Token already invalidated")
     blacklisted_tokens.add(token)
     return {"message": "Logged out successfully"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000) 
